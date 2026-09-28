@@ -8,30 +8,13 @@ import Footer from "./components/Footer";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] theme-blue antialiased dark:bg-gray-800">
+    <div className="min-h-screen bg-[hsl(var(--background))] antialiased">
       <Navbar />
-
- 
-      <section id="home" className="min-h-[90vh]">
-        <Home />
-      </section>
-
-      <section id="about">
-        <About />
-      </section>
-
-      <section id="skills">
-        <Skills />
-      </section>
-
-      <section id="projects">
-        <Projects />
-      </section>
-
-      <section id="contact">
-        <Contact />
-      </section>
-
+      <Home />
+      <About />
+      <Skills />
+      <Projects />
+      <Contact />
       <Footer />
     </div>
   );

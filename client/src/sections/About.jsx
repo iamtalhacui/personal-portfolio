@@ -1,140 +1,132 @@
-import EducationCard from "../components/EducationCard";
 import profile from "../assets/images/profile.jpeg";
 
-const TAGS = ["MERN Stack", "TailwindCSS", "Flutter", "UI/UX", "App Development"];
+const HIGHLIGHTS = [
+  { value: "2+", label: "Years", detail: "Building production apps" },
+  { value: "10+", label: "Projects", detail: "Web & mobile shipped" },
+  { value: "SaaS", label: "Focus", detail: "Australian product team" },
+];
 
 const About = () => {
   return (
-    <>
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        .anim-fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-        .anim-fade-in { opacity: 0; animation: fadeIn 0.6s ease forwards; }
-      `}</style>
+    <section
+      id="about"
+      className="relative scroll-mt-24 overflow-hidden py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/3 -left-20 h-72 w-72 rounded-full bg-[hsl(var(--primary))]/12 blur-[90px]" />
+        <div className="absolute bottom-10 right-0 h-80 w-80 rounded-full bg-[hsl(var(--accent))]/8 blur-[100px]" />
+      </div>
 
-      <section
-        id="about"
-        className="relative scroll-mt-20 min-h-screen py-24 px-5 md:px-10 lg:px-32 overflow-hidden"
-      >
-        {/* Background blobs */}
-        <div className="absolute top-20 right-10 w-80 h-80 rounded-full bg-[hsl(var(--primary))]/6 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-20 left-0 w-60 h-60 rounded-full bg-[hsl(var(--primary))]/5 blur-3xl pointer-events-none" />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 md:px-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--primary))]">
+          About
+        </p>
 
-        {/* Section heading */}
-        <div className="anim-fade-up" style={{ animationDelay: "0.1s" }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-[hsl(var(--primary))]/70 mb-2">
-            Get to know me
-          </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[hsl(var(--foreground))] dark:text-white">
-            About Me
-          </h2>
-          <div className="h-1 w-14 rounded-full bg-[hsl(var(--primary))] mt-3" />
-        </div>
+        <div className="mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center">
+          {/* Portrait */}
+          <div className="lg:col-span-5">
+            <div className="relative mx-auto lg:mx-0 w-full max-w-[22rem]">
+              <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[hsl(var(--primary))]/50 via-[hsl(var(--primary))]/10 to-transparent opacity-80" />
+              <div className="absolute -bottom-3 -right-3 h-full w-full rounded-[1.35rem] border border-[hsl(var(--primary))]/20 -z-10" />
 
-        {/* Card */}
-        <div
-          className="anim-fade-up mt-12 flex flex-col lg:flex-row gap-0 rounded-2xl border border-[hsl(var(--primary))]/10 bg-white/60 dark:bg-white/4 backdrop-blur-md shadow-xl shadow-black/5 overflow-hidden"
-          style={{ animationDelay: "0.25s" }}
-        >
-          {/* ── Left: Profile sidebar ── */}
-          <div className="relative flex flex-col items-center justify-start gap-4 py-10 px-8 lg:w-72 border-b lg:border-b-0 lg:border-r border-[hsl(var(--primary))]/10 bg-white/40 dark:bg-white/3">
-            {/* Subtle top gradient */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[hsl(var(--primary))]/40 via-[hsl(var(--primary))] to-[hsl(var(--primary))]/40" />
-
-            {/* Avatar */}
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-[hsl(var(--primary))]/20 blur-xl scale-110" />
-              <img
-                src={profile}
-                alt="Muhammad Talha"
-                className="relative w-32 h-32 md:w-36 md:h-36 rounded-full border-2 border-[hsl(var(--primary))]/40 object-cover hover:scale-105 hover:border-[hsl(var(--primary))] transition-all duration-300"
-              />
-              {/* Online dot */}
-              <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-green-400 border-2 border-white dark:border-[#0d1117] animate-pulse" />
+              <div className="relative overflow-hidden rounded-[1.25rem] aspect-[4/5] bg-[hsl(var(--muted))]">
+                <img
+                  src={profile}
+                  alt="Muhammad Talha"
+                  className="h-full w-full object-cover object-top scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                  <div className="h-px w-10 bg-[hsl(var(--primary))] mb-3.5" />
+                  <p className="font-display text-[1.35rem] sm:text-xl font-bold tracking-tight text-white leading-none">
+                    Muhammad Talha
+                  </p>
+                  <p className="mt-2 text-[13px] text-white/75 font-medium tracking-wide">
+                    Full Stack Web Developer
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="text-center">
-              <h3 className="font-extrabold text-lg text-[hsl(var(--foreground))] dark:text-white tracking-tight">
-                Muhammad Talha
-              </h3>
-              <p className="text-sm text-[hsl(var(--foreground))]/50 dark:text-white/40 mt-0.5">
-                Software Engineering Student
+          {/* Content */}
+          <div className="lg:col-span-7 flex flex-col gap-8 max-w-xl lg:max-w-none">
+            <div className="space-y-4 max-w-[34rem]">
+              <p className="text-[15px] sm:text-[15.5px] leading-[1.75] text-[hsl(var(--muted-foreground))]">
+                I&apos;m Muhammad Talha — a Software Engineering student and Full
+                Stack Developer shipping features for an international Australian
+                SaaS. Day to day I work across NestJS APIs, PostgreSQL, and
+                Next.js frontends that stay fast and maintainable.
+              </p>
+              <p className="text-[15px] sm:text-[15.5px] leading-[1.75] text-[hsl(var(--muted-foreground))]">
+                I care about clean architecture, thoughtful UI, and code other
+                engineers can extend without friction. Outside client work I
+                build side projects with the MERN stack and Flutter to keep
+                sharpening the craft.
               </p>
             </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap justify-center gap-2 mt-1">
-              {TAGS.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 rounded-full text-xs font-semibold font-mono border border-[hsl(var(--primary))]/20 bg-[hsl(var(--primary))]/8 text-[hsl(var(--primary))]"
+            <div className="grid grid-cols-3 gap-4 max-w-[34rem]">
+              {HIGHLIGHTS.map(({ value, label, detail }) => (
+                <div
+                  key={label}
+                  className="border-t border-[hsl(var(--border))] pt-3.5"
                 >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {/* Quick stats */}
-            <div className="flex gap-6 mt-2">
-              {[
-                { label: "Projects", value: "10+" },
-                { label: "Experience", value: "2yr" },
-              ].map(({ label, value }) => (
-                <div key={label} className="text-center">
-                  <p className="text-xl font-extrabold text-[hsl(var(--primary))]">{value}</p>
-                  <p className="text-xs text-[hsl(var(--foreground))]/40 dark:text-white/30">{label}</p>
+                  <p className="font-display text-2xl font-extrabold tracking-tight text-[hsl(var(--primary))] leading-none">
+                    {value}
+                  </p>
+                  <p className="mt-2 text-[13px] font-semibold text-[hsl(var(--foreground))] leading-snug">
+                    {label}
+                  </p>
+                  <p className="mt-1 text-[11px] leading-snug text-[hsl(var(--muted-foreground))]">
+                    {detail}
+                  </p>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* ── Right: Bio + Education ── */}
-          <div className="flex flex-col flex-1 py-10 px-8 md:px-10 gap-8">
-
-            {/* Introduction */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-1 h-5 rounded-full bg-[hsl(var(--primary))]" />
-                <h3 className="text-lg font-bold text-[hsl(var(--foreground))] dark:text-white">
-                  Introduction
-                </h3>
-              </div>
-              <p className="text-sm md:text-base leading-10 text-[hsl(var(--foreground))]/70 dark:text-white/60  max-w-xl">
-                I'm{" "}
-                <span className="font-bold text-[hsl(var(--foreground))] dark:text-white">
-                  Muhammad Talha
-                </span>
-                , a passionate Full-Stack Developer specialising in the{" "}
-                <span className="font-bold text-[hsl(var(--primary))]">MERN Stack</span>.
-                Always curious, always creating — on a journey to build exciting{" "}
-                <span className="font-bold text-[hsl(var(--foreground))] dark:text-white">
-                  projects
-                </span>{" "}
-                that are fast, beautiful, and meaningful.
+            <div className="border-t border-[hsl(var(--border))] pt-6 max-w-[34rem]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))]">
+                Education
               </p>
+              <div className="mt-3.5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+                <div>
+                  <h3 className="font-display text-base sm:text-lg font-bold tracking-tight text-[hsl(var(--foreground))]">
+                    BS Software Engineering
+                  </h3>
+                  <p className="mt-1 text-sm font-semibold text-[hsl(var(--primary))]">
+                    COMSATS University Abbottabad
+                  </p>
+                </div>
+                <div className="sm:text-right shrink-0">
+                  <p className="text-sm font-semibold text-[hsl(var(--foreground))]">
+                    CGPA 3.51
+                  </p>
+                  <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">
+                    2023 — Present
+                  </p>
+                </div>
+              </div>
             </div>
 
-         
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-1 h-5 rounded-full bg-[hsl(var(--primary))]" />
-                <h3 className="text-lg font-bold text-[hsl(var(--foreground))] dark:text-white">
-                  Education
-                </h3>
-              </div>
-              <EducationCard />
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] shadow-[0_12px_28px_-12px_hsl(var(--primary)/0.55)] hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Get in touch
+              </a>
+              <a
+                href="#projects"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:border-[hsl(var(--primary))]/45 hover:text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/5 hover:-translate-y-0.5 transition-all duration-200"
+              >
+                See projects
+              </a>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

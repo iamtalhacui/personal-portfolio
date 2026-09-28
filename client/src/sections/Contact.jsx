@@ -1,202 +1,289 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram, CheckCircle } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Github,
+  Linkedin,
+  Instagram,
+  CheckCircle,
+  ArrowUpRight,
+} from "lucide-react";
 import { CiWarning } from "react-icons/ci";
-import axios from "axios"
+import axios from "axios";
+
 const openLink = (url) => window.open(url, "_blank", "noopener,noreferrer");
 
-const contactInfo = [
-  { icon: Mail,    label: "Email",    value: "imtalha.dev@gmail.com",  color: "text-[hsl(var(--primary))]", bg: "bg-[hsl(var(--primary))]/10 border-[hsl(var(--primary))]/20" },
-  { icon: Phone,   label: "Phone",    value: "+92 316 5772553",         color: "text-emerald-500",           bg: "bg-emerald-500/10 border-emerald-500/20" },
-  { icon: MapPin,  label: "Location", value: "Abbottabad, Pakistan",    color: "text-rose-400",              bg: "bg-rose-400/10 border-rose-400/20" },
+const contactLinks = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "imtalha.dev@gmail.com",
+    href: "mailto:imtalha.dev@gmail.com",
+  },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: "+92 316 5772553",
+    href: "tel:+923165772553",
+  },
+  {
+    icon: MapPin,
+    label: "Location",
+    value: "Abbottabad, Pakistan",
+    href: null,
+  },
 ];
 
 const socials = [
-  { icon: Github,   action: () => openLink("https://github.com/iamtalhacui"),              label: "GitHub",    style: "border-white/15 hover:border-white/40 hover:bg-white/10 text-white/60 hover:text-white" },
-  { icon: Linkedin, action: () => openLink("https://www.linkedin.com/in/m-talha-mern/"),  label: "LinkedIn",  style: "border-white/15 hover:border-[#0A66C2]/60 hover:bg-[#0A66C2]/15 text-white/60 hover:text-[#0A66C2]" },
-  { icon: Instagram,action: () => openLink("https://www.instagram.com/mr_talha_here/"),   label: "Instagram", style: "border-white/15 hover:border-pink-400/60 hover:bg-pink-400/15 text-white/60 hover:text-pink-400" },
+  {
+    icon: Github,
+    label: "GitHub",
+    action: () => openLink("https://github.com/iamtalhacui"),
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    action: () => openLink("https://www.linkedin.com/in/m-talha-mern/"),
+  },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    action: () => openLink("https://www.instagram.com/mr_talha_here/"),
+  },
 ];
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [empty, setEmpty] = useState(false);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = async () => {
-    if(formData.email.length != 0 && formData.message.length != 0 && formData.subject.length != 0 && formData.name.length != 0)
-    {
-      setIsSubmitting(true);
-     await  axios.post("https://portfolio-backend-otzw.onrender.com/api/send-msg", formData)
-    setIsSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    }, 3000);
-  } else {
-      setEmpty(true)
+  const handleSubmit = async (e) => {
+    e?.preventDefault?.();
+    const { name, email, subject, message } = formData;
+    if (!name || !email || !subject || !message) {
+      setEmpty(true);
+      setTimeout(() => setEmpty(false), 3000);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await axios.post("/api/send-msg", formData);
+      setSubmitted(true);
       setTimeout(() => {
-      setEmpty(false)
-    }, 3000);
-  }
+        setSubmitted(false);
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      }, 3000);
+    } catch {
+      setEmpty(true);
+      setTimeout(() => setEmpty(false), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const inputClass =
-    "w-full px-4 py-2.5 text-sm rounded-xl border border-[hsl(var(--foreground))]/12 dark:border-white/10 bg-white/50 dark:bg-white/4 text-[hsl(var(--foreground))] dark:text-white placeholder:text-[hsl(var(--foreground))]/30 dark:placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))]/40 focus:border-[hsl(var(--primary))]/40 hover:border-[hsl(var(--primary))]/25 transition-all duration-200";
+  const fieldClass =
+    "w-full bg-transparent border-0 border-b border-[hsl(var(--border))] px-0 py-3 text-sm text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]/50 focus:outline-none focus:border-[hsl(var(--primary))] transition-colors duration-200";
 
   return (
-    <>
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .anim-fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-      `}</style>
+    <section
+      id="contact"
+      className="relative scroll-mt-24 overflow-hidden py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-16 left-0 h-72 w-72 rounded-full bg-[hsl(var(--primary))]/10 blur-[90px]" />
+        <div className="absolute bottom-0 right-10 h-64 w-64 rounded-full bg-[hsl(var(--accent))]/8 blur-[90px]" />
+      </div>
 
-      <section id="contact" className="relative min-h-screen py-24 px-5 md:px-10 lg:px-32 overflow-hidden scroll-mt-20">
-
-    
-        <div className="absolute top-10 left-0 w-80 h-80 rounded-full bg-[hsl(var(--primary))]/6 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-0 w-72 h-72 rounded-full bg-[hsl(var(--primary))]/5 blur-3xl pointer-events-none" />
-
-       
-        <div className="anim-fade-up" style={{ animationDelay: "0.1s" }}>
-          <p className="text-xs font-semibold tracking-widest uppercase text-[hsl(var(--primary))]/70 mb-2">
-            Let's work together
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 md:px-10">
+        <div className="max-w-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--primary))]">
+            Contact
           </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[hsl(var(--foreground))] dark:text-white">
-            Contact Me
+          <h2 className="mt-2.5 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-[hsl(var(--foreground))] leading-snug">
+            Let&apos;s talk
           </h2>
-          <div className="h-1 w-14 rounded-full bg-[hsl(var(--primary))] mt-3" />
-          <p className="mt-4 text-sm text-[hsl(var(--foreground))]/50 dark:text-white/40 max-w-md">
-            Have a project in mind or just want to say hello? My inbox is always open.
+          <p className="mt-3 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Have a project in mind or just want to say hello? I usually reply
+            within a day.
           </p>
         </div>
 
-       
-        <div
-          className="anim-fade-up mt-12 grid grid-cols-1 lg:grid-cols-5 rounded-2xl border border-[hsl(var(--primary))]/10 overflow-hidden shadow-xl shadow-black/5"
-          style={{ animationDelay: "0.25s" }}
-        >
-          
-          <div className="relative lg:col-span-2 flex flex-col gap-8 p-8 bg-[hsl(var(--primary))] overflow-hidden">
-            
-            <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full bg-white/8 pointer-events-none" />
-            <div className="absolute -top-10 -left-10 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
+        <div className="mt-12 md:mt-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 lg:items-start">
+          {/* Details */}
+          <div className="lg:col-span-4 flex flex-col gap-8 lg:sticky lg:top-28">
+            <div className="space-y-5">
+              {contactLinks.map(({ icon: Icon, label, value, href }) => {
+                const content = (
+                  <>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--primary))]">
+                      <Icon size={15} strokeWidth={1.75} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--muted-foreground))]">
+                        {label}
+                      </span>
+                      <span className="mt-0.5 block text-sm font-medium text-[hsl(var(--foreground))] truncate group-hover:text-[hsl(var(--primary))] transition-colors">
+                        {value}
+                      </span>
+                    </span>
+                    {href && (
+                      <ArrowUpRight
+                        size={14}
+                        className="ml-auto shrink-0 text-[hsl(var(--muted-foreground))] opacity-0 -translate-y-0.5 group-hover:opacity-100 transition-all"
+                      />
+                    )}
+                  </>
+                );
 
-            <div>
-              <h3 className="text-xl font-extrabold text-white tracking-tight">Get In Touch</h3>
-              <p className="mt-2 text-sm text-white/65 leading-relaxed">
-                I'm always excited to connect with fellow developers, potential clients, and creative minds.
+                return href ? (
+                  <a
+                    key={label}
+                    href={href}
+                    className="group flex items-center gap-3"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <div key={label} className="flex items-center gap-3">
+                    {content}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="border-t border-[hsl(var(--border))] pt-6">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--muted-foreground))] mb-3">
+                Social
               </p>
-            </div>
-
-            
-            <div className="flex flex-col gap-4">
-              {contactInfo.map(({ icon: Icon, label, value, bg, color }) => (
-                <div key={label} className="flex items-center gap-3 group">
-                  <div className={`flex-shrink-0 w-9 h-9 rounded-xl border bg-white/15 border-white/20 flex items-center justify-center text-white transition-all duration-200 group-hover:bg-white/25`}>
-                    <Icon size={15} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider">{label}</p>
-                    <p className="text-sm font-medium text-white/85">{value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            
-            <div>
-              <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-3">Find me on</p>
               <div className="flex gap-2">
-                {socials.map(({ icon: Icon, action, label, style }) => (
+                {socials.map(({ icon: Icon, label, action }) => (
                   <button
                     key={label}
+                    type="button"
                     onClick={action}
                     aria-label={label}
-                    className={`flex items-center justify-center w-9 h-9 rounded-full border ${style} hover:scale-110 hover:-rotate-6 transition-all duration-200`}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))]/40 hover:text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/5 transition-all duration-200"
                   >
-                    <Icon size={15} />
+                    <Icon size={15} strokeWidth={1.75} />
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* ── Right: Form ── */}
-          <div className="lg:col-span-3 flex flex-col gap-5 p-8 bg-white/60 dark:bg-white/4 backdrop-blur-sm">
-            <h3 className="font-extrabold text-lg text-[hsl(var(--foreground))] dark:text-white tracking-tight">
-              Send a Message
-            </h3>
-
-           
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="lg:col-span-8 flex flex-col gap-6 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/40 p-6 sm:p-8"
+          >
             {submitted && (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl border border-emerald-400/30 bg-emerald-400/10 text-emerald-600 dark:text-emerald-400 text-sm font-medium">
+              <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">
                 <CheckCircle size={16} />
-                Message sent! I'll get back to you soon.
+                Message sent — I&apos;ll get back to you soon.
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[hsl(var(--foreground))]/60 dark:text-white/40 uppercase tracking-wider">Full Name</label>
-                <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Muhammad Talha" className={inputClass} />
+            {empty && (
+              <div className="flex items-center gap-2.5 rounded-xl border border-red-400/25 bg-red-400/8 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400">
+                <CiWarning size={18} />
+                Please fill in all fields before sending.
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-[hsl(var(--foreground))]/60 dark:text-white/40 uppercase tracking-wider">Email</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" className={inputClass} />
-              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <label className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--muted-foreground))]">
+                  Name
+                </span>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your name"
+                  autoComplete="name"
+                  className={fieldClass}
+                />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--muted-foreground))]">
+                  Email
+                </span>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={fieldClass}
+                />
+              </label>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-[hsl(var(--foreground))]/60 dark:text-white/40 uppercase tracking-wider">Subject</label>
-              <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="What's this about?" className={inputClass} />
-            </div>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--muted-foreground))]">
+                Subject
+              </span>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="What's this about?"
+                className={fieldClass}
+              />
+            </label>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-[hsl(var(--foreground))]/60 dark:text-white/40 uppercase tracking-wider">Message</label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--muted-foreground))]">
+                Message
+              </span>
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                placeholder="Tell me about your project or just say hello!"
-                className={`${inputClass} resize-none`}
+                placeholder="Tell me about your project or just say hello…"
+                className={`${fieldClass} resize-none`}
               />
-            </div>
+            </label>
 
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting || submitted}
-              className="relative overflow-hidden group flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--background))] font-bold text-sm shadow-lg shadow-[hsl(var(--primary))]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[hsl(var(--primary))]/35 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 transition-all duration-200"
-            >
-              <span className="absolute inset-0 bg-white/20 -translate-x-full -skew-x-12 group-hover:translate-x-[120%] transition-transform duration-300" />
-              {isSubmitting ? (
-                <>
-                  <div className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                  <span className="relative">Sending…</span>
-                </>
-              ) : (
-                <>
-                  <Send size={14} />
-                  <span className="relative">Send Message</span>
-                </>
-              )}
-            </button>
-            {empty && (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl border border-red-400/30 bg-red-400/10 text-red-600 dark:text-red-400 text-sm font-medium">
-                <CiWarning />
-                Fields cannot be empty
-              </div>
-            )}
-          </div>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isSubmitting || submitted}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] shadow-[0_12px_28px_-12px_hsl(var(--primary)/0.55)] hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 transition-all duration-200"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="h-4 w-4 rounded-full border-2 border-[hsl(var(--primary-foreground))]/30 border-t-[hsl(var(--primary-foreground))] animate-spin" />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <Send size={14} strokeWidth={2.25} />
+                    Send message
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

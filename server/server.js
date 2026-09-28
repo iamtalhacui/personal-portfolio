@@ -9,7 +9,10 @@ const app = express();
 
 app.use(express.json())
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://10.0.1.138', 'http://16.16.205.65'],
+    credentials: true
+}));
 
 app.post("/api/send-msg" ,  (req , res)=>{
 const {name , email , subject , message} = req.body 

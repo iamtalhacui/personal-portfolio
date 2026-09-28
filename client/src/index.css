@@ -1,46 +1,293 @@
 @import "tailwindcss";
-:root {
-  --font-fira-sans-condensed: 'Fira Sans Condensed', sans-serif;
-}
-@custom-variant dark (&:where(.dark, .dark *));
-:root, .theme-blue {
 
-  --background: 210 50% 98%;
-  
- 
-  --foreground: 230 15% 25%;
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-display: "Syne", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --background: 160 30% 97%;
+  --foreground: 220 28% 12%;
   --card: 0 0% 100%;
-  --card-foreground: 230 15% 25%;
+  --card-foreground: 220 28% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 230 15% 25%;
-  --primary: 160 84% 39%;
-  --primary-hover: 160 84% 34%;
+  --popover-foreground: 220 28% 12%;
+  --primary: 162 72% 36%;
+  --primary-hover: 162 72% 30%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 150 30% 95%;
-  --secondary-foreground: 160 60% 30%;
-  --muted: 150 25% 94%;
-  --muted-foreground: 230 10% 45%;
-  --accent: 280 65% 60%;
+  --secondary: 158 28% 94%;
+  --secondary-foreground: 162 50% 28%;
+  --muted: 160 18% 93%;
+  --muted-foreground: 220 10% 42%;
+  --accent: 168 55% 42%;
   --accent-foreground: 0 0% 100%;
   --destructive: 348 83% 47%;
   --destructive-foreground: 0 0% 100%;
-  --border: 150 20% 88%;
-  --input: 150 20% 88%;
-  --ring: 160 84% 39%;
-  --sidebar-background: 155 40% 96%;
-  --sidebar-foreground: 230 15% 35%;
-  --sidebar-primary: 160 84% 39%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 150 35% 92%;
-  --sidebar-accent-foreground: 230 15% 25%;
-  --sidebar-border: 150 20% 88%;
-  --sidebar-ring: 160 84% 39%;
-  --footer-background: hsl(230, 25%, 12%);
-  --codebg: hsl(155, 30%, 98%);
-  --radius: .75rem;
+  --border: 160 16% 86%;
+  --input: 160 16% 86%;
+  --ring: 162 72% 36%;
+  --codebg: hsl(158, 24%, 97%);
+  --footer-background: hsl(220, 28%, 10%);
+  --surface-glass: 0 0% 100% / 0.85;
+  --nav-border: 160 16% 68%;
+  --hero-grid: 162 40% 40% / 0.06;
+  --radius: 0.75rem;
 }
 
-body{
+.dark {
+  --background: 222 28% 7%;
+  --foreground: 160 20% 96%;
+  --card: 222 24% 10%;
+  --card-foreground: 160 20% 96%;
+  --popover: 222 24% 10%;
+  --popover-foreground: 160 20% 96%;
+  --primary: 158 70% 48%;
+  --primary-hover: 158 70% 42%;
+  --primary-foreground: 222 28% 7%;
+  --secondary: 220 20% 14%;
+  --secondary-foreground: 158 40% 75%;
+  --muted: 220 18% 14%;
+  --muted-foreground: 215 12% 62%;
+  --accent: 168 55% 45%;
+  --accent-foreground: 222 28% 7%;
+  --destructive: 348 83% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 16% 18%;
+  --input: 220 16% 18%;
+  --ring: 158 70% 48%;
+  --codebg: hsl(222, 24%, 9%);
+  --footer-background: hsl(222, 30%, 5%);
+  --surface-glass: 222 28% 10% / 0.88;
+  --nav-border: 0 0% 100% / 0.28;
+  --hero-grid: 158 50% 55% / 0.07;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
   background-color: hsl(var(--background));
-  font-family: var(--font-fira-sans-condensed);
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.22);
+  color: hsl(var(--foreground));
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes mesh-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4%, -3%) scale(1.05);
+  }
+}
+
+@keyframes nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes menu-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-fade-up {
+  opacity: 0;
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.anim-fade-in {
+  opacity: 0;
+  animation: fade-in 0.7s ease forwards;
+}
+
+.anim-slide-r {
+  opacity: 0;
+  animation: slide-right 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cursor-blink {
+  animation: blink 0.9s step-end infinite;
+}
+
+.hero-mesh {
+  animation: mesh-drift 18s ease-in-out infinite;
+}
+
+.float-y {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+.nav-enter {
+  animation: nav-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.menu-enter {
+  animation: menu-in 0.28s ease forwards;
+}
+
+.menu-link-enter {
+  opacity: 0;
+  animation: menu-link-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-scroll-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.marquee-fade {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+
+.marquee-row {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.75rem;
+  padding-inline: 0.75rem;
+  animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.marquee-track-reverse {
+  animation-name: marquee-scroll-reverse;
+}
+
+.marquee-row:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }

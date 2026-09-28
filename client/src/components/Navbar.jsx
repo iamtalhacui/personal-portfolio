@@ -1,7 +1,5 @@
-
-
 import { MdMenu, MdClose, MdDarkMode, MdLightMode } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const links = ["Home", "About", "Skills", "Projects", "Contact"];
 
@@ -12,86 +10,125 @@ const Navbar = () => {
   const [active, setActive] = useState("Home");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    const stored = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const shouldDark = stored === "dark" || (!stored && prefersDark);
+    document.documentElement.classList.toggle("dark", shouldDark);
+    setIsDark(shouldDark);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 16);
+
+      const sections = links.map((link) =>
+        document.getElementById(link.toLowerCase())
+      );
+      const offset = window.scrollY + 120;
+      for (let i = sections.length - 1; i >= 0; i -= 1) {
+        const section = sections[i];
+        if (section && section.offsetTop <= offset) {
+          setActive(links[i]);
+          break;
+        }
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   const toggleTheme = () => {
-    document.documentElement.classList.toggle("dark");
-    setIsDark((prev) => !prev);
+    const next = !isDark;
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+    setIsDark(next);
   };
 
   return (
     <>
-      {/* Navbar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-300 ${
-          scrolled ? "py-2.5 px-6" : "py-4 px-6"
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-400 nav-enter ${
+          scrolled ? "py-2.5 px-4 md:px-6" : "py-4 px-4 md:px-6"
         }`}
       >
         <div
-          className={`flex items-center justify-between w-full max-w-4xl rounded-full border border-white/15 bg-white/10 dark:bg-black/40 backdrop-blur-xl px-5 py-2.5 transition-all duration-300 ${
-            scrolled ? "shadow-2xl" : "shadow-md"
+          className={`flex items-center justify-between w-full max-w-5xl rounded-2xl border border-[hsl(var(--nav-border))] px-4 sm:px-5 py-2.5 transition-all duration-300 ${
+            scrolled
+              ? "bg-[hsl(var(--surface-glass))] shadow-[0_10px_40px_-12px_rgba(0,0,0,0.25)] backdrop-blur-2xl"
+              : "bg-[hsl(var(--surface-glass))]/60 backdrop-blur-md shadow-none"
           }`}
         >
-          {/* Logo */}
           <a
             href="#home"
-            className="relative font-extrabold text-xl tracking-tight text-[hsl(var(--primary))] group"
+            className="group flex items-center gap-3.5"
+            aria-label="Muhammad Talha — Home"
           >
-            MT
-            <span className="absolute -bottom-0.5 left-0 w-full h-0.5 bg-[hsl(var(--primary))] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] font-[family-name:var(--font-mono)] text-[11px] font-medium tracking-[0.12em]"
+              aria-hidden
+            >
+              MT
+            </span>
+            <span className="hidden sm:block font-display text-[15px] font-bold tracking-tight text-[hsl(var(--foreground))] leading-none">
+              Muhammad Talha
+            </span>
           </a>
 
-          {/* Desktop Links */}
-          <ul className="hidden md:flex items-center gap-1">
+          <ul className="hidden md:flex items-center gap-0.5">
             {links.map((link) => (
               <li key={link}>
                 <a
                   href={`#${link.toLowerCase()}`}
                   onClick={() => setActive(link)}
-                  className={`relative px-4 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 group ${
+                  className={`relative px-3.5 py-1.5 text-[13px] font-semibold tracking-wide transition-colors duration-200 ${
                     active === link
                       ? "text-[hsl(var(--primary))]"
-                      : "text-[hsl(var(--foreground))] dark:text-white/70 hover:text-[hsl(var(--primary))]"
+                      : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
                   }`}
                 >
+                  {link}
                   <span
-                    className={`absolute inset-0 rounded-full bg-[hsl(var(--primary))]/10 transition-all duration-200 ${
+                    className={`absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-[hsl(var(--primary))] transition-all duration-300 ${
                       active === link
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100"
+                        ? "opacity-100 scale-x-100"
+                        : "opacity-0 scale-x-50"
                     }`}
                   />
-                  <span className="relative">{link}</span>
                 </a>
               </li>
             ))}
           </ul>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2.5">
-            {/* Theme toggle */}
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-[hsl(var(--primary))]/30 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--background))] hover:rotate-12 hover:scale-110 transition-all duration-200"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--border))] text-[hsl(var(--foreground))]/70 hover:border-[hsl(var(--primary))]/40 hover:text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/8 transition-all duration-200"
             >
-              {isDark ? <MdLightMode size={16} /> : <MdDarkMode size={16} />}
+              {isDark ? <MdLightMode size={17} /> : <MdDarkMode size={17} />}
             </button>
 
-            {/* Resume — desktop */}
-            <button className="hidden md:block relative overflow-hidden text-sm font-bold tracking-wide px-5 py-2 rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--background))] shadow-lg shadow-[hsl(var(--primary))]/30 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 transition-all duration-200 group">
-              <span className="absolute inset-0 bg-white/20 -translate-x-full -skew-x-12 group-hover:translate-x-[120%] transition-transform duration-300" />
-              <span className="relative">Resume</span>
-            </button>
+            <a
+              href="#contact"
+              className="hidden md:inline-flex relative overflow-hidden items-center px-4 py-2 rounded-xl text-[13px] font-bold tracking-wide bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] shadow-[0_10px_28px_-10px_hsl(var(--primary)/0.65)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_-10px_hsl(var(--primary)/0.75)] active:translate-y-0 transition-all duration-200 group"
+            >
+              <span className="absolute inset-0 bg-white/20 -translate-x-full -skew-x-12 group-hover:translate-x-[120%] transition-transform duration-400" />
+              <span className="relative">Hire Me</span>
+            </a>
 
-            {/* Hamburger — mobile */}
             <button
               onClick={() => setIsMenuOpen(true)}
               aria-label="Open menu"
-              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full border border-[hsl(var(--primary))]/30 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/10 transition-all duration-200"
+              className="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:border-[hsl(var(--primary))]/40 hover:text-[hsl(var(--primary))] transition-all duration-200"
             >
               <MdMenu size={18} />
             </button>
@@ -99,52 +136,61 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Fullscreen Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-2 bg-white/95 dark:bg-[#08080f]/97 backdrop-blur-2xl [animation:fadeScale_0.3s_ease_forwards]">
-          {/* Close */}
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="absolute top-6 right-6 flex items-center justify-center w-10 h-10 rounded-full border border-[hsl(var(--primary))]/30 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/10 hover:rotate-90 transition-all duration-200"
-          >
-            <MdClose size={20} />
-          </button>
-
-          {/* Links */}
-          {links.map((link, i) => (
+        <div className="fixed inset-0 z-[60] flex flex-col bg-[hsl(var(--background))]/97 backdrop-blur-2xl menu-enter">
+          <div className="flex items-center justify-between px-5 py-5">
             <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-              onClick={() => { setActive(link); setIsMenuOpen(false); }}
-              style={{ animationDelay: `${i * 60 + 40}ms` }}
-              className="font-extrabold text-[2.4rem] leading-tight tracking-tight text-[hsl(var(--foreground))] dark:text-white/85 hover:text-[hsl(var(--primary))] hover:translate-x-2 transition-all duration-200 opacity-0 [animation:slideUp_0.4s_ease_forwards]"
+              href="#home"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-3"
             >
-              {link}
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] font-[family-name:var(--font-mono)] text-[11px] font-medium tracking-[0.12em]">
+                MT
+              </span>
+              <span className="font-display text-base font-bold text-[hsl(var(--foreground))] leading-none">
+                Muhammad Talha
+              </span>
             </a>
-          ))}
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Close menu"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))] hover:rotate-90 transition-all duration-200"
+            >
+              <MdClose size={20} />
+            </button>
+          </div>
 
-          {/* Resume */}
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            style={{ animationDelay: "340ms" }}
-            className="mt-6 font-bold text-base px-8 py-3 rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--background))] shadow-xl shadow-[hsl(var(--primary))]/30 opacity-0 [animation:slideUp_0.4s_ease_forwards]"
-          >
-            Resume ↗
-          </button>
+          <div className="flex flex-1 flex-col justify-center gap-1 px-8 pb-16">
+            {links.map((link, i) => (
+              <a
+                key={link}
+                href={`#${link.toLowerCase()}`}
+                onClick={() => {
+                  setActive(link);
+                  setIsMenuOpen(false);
+                }}
+                style={{ animationDelay: `${i * 55 + 50}ms` }}
+                className={`menu-link-enter font-display text-4xl sm:text-5xl font-extrabold tracking-tight transition-colors duration-200 ${
+                  active === link
+                    ? "text-[hsl(var(--primary))]"
+                    : "text-[hsl(var(--foreground))] hover:text-[hsl(var(--primary))]"
+                }`}
+              >
+                {link}
+              </a>
+            ))}
+
+            <a
+              href="#contact"
+              onClick={() => setIsMenuOpen(false)}
+              style={{ animationDelay: "340ms" }}
+              className="menu-link-enter mt-8 inline-flex w-fit items-center px-7 py-3 rounded-xl bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] font-bold text-sm shadow-lg shadow-[hsl(var(--primary))]/25"
+            >
+              Hire Me
+            </a>
+          </div>
         </div>
       )}
-
-      {/* Keyframes — only 2 animations that Tailwind can't express natively */}
-      <style>{`
-        @keyframes fadeScale {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </>
   );
 };
